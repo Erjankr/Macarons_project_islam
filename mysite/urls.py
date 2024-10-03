@@ -11,7 +11,7 @@ urlpatterns = [
     path('', include('decor.urls')),
     path('', include('basket.urls')),
     path('', include('wedding.urls')),
-
+    path('',include('admin_part.urls')),
 ]
 urlpatterns += swagger.urlpatterns
 if settings.DEBUG:
