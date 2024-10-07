@@ -49,6 +49,8 @@ class ReadyKits(models.Model):
         verbose_name_plural = 'Готовые наборы'
 
 
+
+
 class Macaron(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название")
     description = models.TextField(verbose_name="Описание")
@@ -61,27 +63,27 @@ class Macaron(models.Model):
         verbose_name = "Макарон"
         verbose_name_plural = "Макароны"
 
-
-class MacaronSet(models.Model):
-    name = models.CharField(max_length=100, verbose_name="Название набора")
-    macarons = models.ManyToManyField('Macaron', through='MacaronSetItem', verbose_name="Собрать наборы")
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "Собрать наборы"
-        verbose_name_plural = "Собрать наборы"
-
-
-class MacaronSetItem(models.Model):
-    macaron_set = models.ForeignKey(MacaronSet, on_delete=models.CASCADE, verbose_name="Набор")
-    macaron = models.ForeignKey(Macaron, on_delete=models.CASCADE, verbose_name="Собрать наборы")
-    quantity = models.PositiveIntegerField(default=1, verbose_name="Количество")
-
-    def __str__(self):
-        return f"{self.macaron.name} x {self.quantity}"
-
-    class Meta:
-        verbose_name = "Элемент набора собрать наборы"
-        verbose_name_plural = "Элементы наборов собрать наборы"
+# #
+# class MacaronSet(models.Model):
+#     name = models.CharField(max_length=100, verbose_name="Название набора")
+#     macarons = models.ManyToManyField('Macaron', through='MacaronSetItem', verbose_name="Собрать наборы")
+#
+#     def __str__(self):
+#         return self.name
+#
+#     class Meta:
+#         verbose_name = "Собрать наборы"
+#         verbose_name_plural = "Собрать наборы"
+#
+#
+# class MacaronSetItem(models.Model):
+#     macaron_set = models.ForeignKey(MacaronSet, on_delete=models.CASCADE, verbose_name="Набор")
+#     macaron = models.ForeignKey(Macaron, on_delete=models.CASCADE, verbose_name="Собрать наборы")
+#     quantity = models.PositiveIntegerField(default=1, verbose_name="Количество")
+#
+#     def __str__(self):
+#         return f"{self.macaron.name} x {self.quantity}"
+#
+#     class Meta:
+#         verbose_name = "Элемент набора собрать наборы"
+#         verbose_name_plural = "Элементы наборов собрать наборы"
