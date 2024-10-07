@@ -1,6 +1,6 @@
 from .models import GiftSet, Sweetdays
 from .models import ReadyKits
-from .models import Macaron, MacaronSet, MacaronSetItem
+from .models import Macaron
 
 
 from rest_framework import serializers
@@ -28,22 +28,6 @@ class ReadyKitsSerializer(serializers.ModelSerializer):
 class MacaronSerializer(serializers.ModelSerializer):
     class Meta:
         model = Macaron
-        fields = '__all__'
-
-
-class MacaronSetItemSerializer(serializers.ModelSerializer):
-    macaron = MacaronSerializer()
-
-    class Meta:
-        model = MacaronSetItem
-        fields = '__all__'
-
-
-class MacaronSetSerializer(serializers.ModelSerializer):
-    macarons = MacaronSetItemSerializer(many=True)
-
-    class Meta:
-        model = MacaronSet
         fields = '__all__'
 
 
