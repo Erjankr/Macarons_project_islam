@@ -20,17 +20,17 @@ from django.utils.translation import gettext_lazy as _
 logger = logging.getLogger(__name__)
 
 # Вьюха для работы с продуктами
-class ProductViewSet(viewsets.ModelViewSet):
+class Product(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 # Вьюха для работы с популярными наборами
-class PopularSetViewSet(viewsets.ModelViewSet):
+class Popular(generics.ListCreateAPIView):
     queryset = PopularSet.objects.all()
     serializer_class = PopularSetSerializer
 
 # Вьюха для работы с новостями
-class NewsViewSet(viewsets.ModelViewSet):
+class News(generics.ListCreateAPIView):
     queryset = News.objects.all()
     serializer_class = NewsSerializer
 
