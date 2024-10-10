@@ -1,16 +1,12 @@
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
 from .views import *
 from rest_framework_simplejwt.views import *
 # Создаем экземпляр маршрутизатора
-router = DefaultRouter()
-
-# Регистрируем вьюхи в маршрутизаторе
-router.register(r'promotion', ProductViewSet, basename='promotion')
-router.register(r'popular-sets', PopularSetViewSet, basename='popular-set')
-router.register(r'news', NewsViewSet, basename='news')
-
-urlpatterns = [ # Включаем маршруты из роутера
+urlpatterns = [
+    path('products/', Product.as_view(), name='product-list-create'),  # Вьюха для работы с продуктами
+    path('popular-sets/', Popular.as_view(), name='popular-set-list-create'),  # Вьюха для работы с популярными наборами
+    path('news/', News.as_view(), name='news-list-create'),  # Вьюха для работы с новостями
+# Включаем маршруты из роутера
     path('register/', AdminRegistrationView.as_view(), name='admin_register'),
     path('login/', UserLoginView.as_view(), name='login'),
     path('reset-password/', ResetPasswordView.as_view(), name='reset_password'),

@@ -46,14 +46,10 @@ INSTALLED_APPS = [
     'decor',
     'basket',
     'wedding',
-<<<<<<< HEAD
     'admin_part',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
-=======
     'sets',
-
->>>>>>> origin/kamila
 ]
 
 
@@ -68,21 +64,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-# Не забудьте добавить аутентификацию токенов
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-<<<<<<< HEAD
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-=======
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
->>>>>>> origin/kamila
-    ],
+    'DEFAULT_PERMISSION_CLASSES': [],
 }
+
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -163,7 +152,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-<<<<<<< HEAD
 AUTH_USER_MODEL = 'admin_part.CustomUser'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -211,8 +199,6 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }
 BASE_URL = 'http://127.0.0.1:8000/admin/'
-=======
-
 
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -222,4 +208,4 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
 ]
->>>>>>> origin/kamila
+
