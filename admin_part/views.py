@@ -13,6 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 import logging
 import random
 import string
+from rest_framework.parsers import MultiPartParser
 from django.conf import settings
 from rest_framework.authtoken.models import Token
 from django.core.mail import send_mail
@@ -23,6 +24,7 @@ logger = logging.getLogger(__name__)
 class Product(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    parser_classes = [MultiPartParser]
 
 # Вьюха для работы с популярными наборами
 class Popular(generics.ListCreateAPIView):
@@ -33,13 +35,13 @@ class Popular(generics.ListCreateAPIView):
 class News(generics.ListCreateAPIView):
     queryset = News.objects.all()
     serializer_class = NewsSerializer
-
+    parser_classes = [MultiPartParser]
 
 # Пример другого представления
 class UserProfileView(generics.RetrieveUpdateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-
+    parser_classes = [MultiPartParser]
 class UserProfileListCreateView(generics.ListCreateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
