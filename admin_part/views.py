@@ -183,19 +183,20 @@ class ResetPasswordVerifyView(generics.GenericAPIView):
 
 
 class ChangePasswordView(generics.UpdateAPIView):
-    """Представление для смены пароля, использует аутентификацию по токену."""
+    """Представление для смены пароля. Использует токен для аутентификации пользователя."""
     serializer_class = ChangePasswordSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Проверка, что пользователь аутентифицирован
+    permission_classes = [permissions.IsAuthenticated]  # Только авторизованные пользователи
 
     def put(self, request, *args, **kwargs):
-        # Инициализируем сериализатор с данными из запроса
+        # Инициализация сериализатора с данными из запроса
         serializer = self.get_serializer(data=request.data)
 
+        # Проверка данных на валидность
         if serializer.is_valid():
-            # Если валидация прошла успешно, обновляем пароль
-            user = request.user  # Получаем текущего пользователя на основе токена
-            user.set_password(serializer.validated_data['new_password'])
-            user.save()
+            # Получаем текущего пользователя, привязанного к токену
+            user = request.user
+            user.set_password(serializer.validated_data['new_password'])  # Устанавливаем новый пароль
+            user.save()  # Сохраняем изменения
 
             return Response({
                 'response': True,
