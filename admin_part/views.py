@@ -182,7 +182,7 @@ class ResetPasswordVerifyView(generics.GenericAPIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class ChangePasswordView(APIView):
+class ChangePasswordView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]  # Пользователь должен быть авторизован
 
     def post(self, request, *args, **kwargs):
