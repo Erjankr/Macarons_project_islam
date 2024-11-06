@@ -181,23 +181,23 @@ class ResetPasswordVerifyView(generics.GenericAPIView):
                 'message': _('Произошла ошибка при сбросе пароля.')
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-class ChangePasswordView(generics.GenericAPIView):
-    permission_classes = [permissions.IsAuthenticated]  # Пользователь должен быть авторизован
+class ChangePasswordView(generics.UpdateAPIView):
+    """Представление для смены пароля."""
+    serializer_class = ChangePasswordSerializer
+    permission_classes = [permissions.IsAuthenticated]  # Требуется аутентификация
 
     def post(self, request, *args, **kwargs):
-        # Получаем текущего пользователя
-        user = request.user
-
-        # Инициализируем сериализатор с данными запроса
-        serializer = ChangePasswordSerializer(data=request.data)
-
-        # Проверяем валидность данных
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            # Если данные валидны, меняем пароль
-            new_password = serializer.validated_data['new_password']
-            user.set_password(new_password)  # Обновляем пароль
-            user.save()  # Сохраняем изменения
-
-            return Response({"detail": "Пароль успешно изменен."}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            user = request.user  # Получаем текущего аутентифицированного пользователя
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+            return Response({
+                'response': True,
+                'message': _('Пароль успешно изменен.')
+            }, status=status.HTTP_200_OK)
+        return Response({
+            'response': False,
+            'message': _('Ошибка при изменении пароля.'),
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
