@@ -195,9 +195,6 @@ class ResetPasswordVerifyView(generics.GenericAPIView):
                 'message': _('Произошла ошибка при сбросе пароля.')
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-
-
 class SetNewPasswordView(APIView):
     """
     Представление для установки нового пароля.
