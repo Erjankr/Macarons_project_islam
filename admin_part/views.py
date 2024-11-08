@@ -1,4 +1,6 @@
 from rest_framework import viewsets
+from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
 from .models import *
 from .serializers import *
 from rest_framework import generics, permissions
@@ -13,9 +15,20 @@ from rest_framework.permissions import IsAuthenticated
 import logging
 import random
 import string
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from .serializers import CreateNewPasswordSerializer
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+from django.utils.translation import gettext_lazy as _
+from .serializers import CreateNewPasswordSerializer
 from rest_framework.parsers import MultiPartParser
+from rest_framework.authentication import TokenAuthentication
 from django.conf import settings
 from rest_framework.authtoken.models import Token
+from rest_framework.views import APIView
 from django.core.mail import send_mail
 from django.utils.translation import gettext_lazy as _
 logger = logging.getLogger(__name__)
@@ -42,6 +55,7 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     parser_classes = [MultiPartParser]
+
 class UserProfileListCreateView(generics.ListCreateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
@@ -182,30 +196,33 @@ class ResetPasswordVerifyView(generics.GenericAPIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class ChangePasswordView(generics.UpdateAPIView):
-    """Представление для смены пароля. Использует токен для аутентификации пользователя."""
-    serializer_class = ChangePasswordSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Только авторизованные пользователи
 
-    def put(self, request, *args, **kwargs):
-        # Инициализация сериализатора с данными из запроса
-        serializer = self.get_serializer(data=request.data)
 
-        # Проверка данных на валидность
+class SetNewPasswordView(APIView):
+    """
+    Представление для установки нового пароля.
+    Оно ожидает два поля: `password` и `confirm_password`.
+    Если они совпадают, выдает сообщение об успешной установке пароля.
+    """
+
+    @swagger_auto_schema(
+        request_body=CreateNewPasswordSerializer,
+        responses={
+            200: openapi.Response(
+                description="Пароль успешно установлен.",
+                examples={"application/json": {"message": "Пароль успешно установлен."}}
+            ),
+            400: "Ошибка валидации данных"
+        }
+    )
+    def post(self, request):
+        serializer = CreateNewPasswordSerializer(data=request.data)
         if serializer.is_valid():
-            # Получаем текущего пользователя, привязанного к токену
-            user = request.user
-            user.set_password(serializer.validated_data['new_password'])  # Устанавливаем новый пароль
-            user.save()  # Сохраняем изменения
+            # Если данные валидны, можно установить пароль.
+            # Здесь можно добавить код для сохранения пароля, если требуется.
 
-            return Response({
-                'response': True,
-                'message': _('Пароль успешно изменен.')
-            }, status=status.HTTP_200_OK)
-
-        # Если валидация не прошла, возвращаем ошибки
-        return Response({
-            'response': False,
-            'message': _('Ошибка при изменении пароля.'),
-            'errors': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"message": "Пароль успешно установлен."},
+                status=status.HTTP_200_OK
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -66,6 +66,7 @@ class AdminRegistrationSerializer(serializers.ModelSerializer):
         if CustomUser.objects.filter(email=value).exists():
             raise serializers.ValidationError("Пользователь с таким email уже существует.")
         return value
+
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(style={'input_type': 'password'})
@@ -87,11 +88,34 @@ class ResetPasswordVerifySerializer(serializers.Serializer):
     reset_code = serializers.CharField(max_length=100)
 
 
-class ChangePasswordSerializer(serializers.Serializer):
-    new_password = serializers.CharField(required=True, min_length=8)
-    confirm_password = serializers.CharField(required=True, min_length=8)
 
-    def validate(self, attrs):
-        if attrs['new_password'] != attrs['confirm_password']:
+class CreateNewPasswordSerializer(serializers.Serializer):
+    """
+    Сериализатор для создания нового пароля с подтверждением.
+    Поля:
+    - `password`: Новый пароль пользователя.
+    - `confirm_password`: Поле для повторного ввода пароля, чтобы подтвердить его.
+    """
+    password = serializers.CharField(
+        write_only=True,
+        required=True,
+        min_length=8,
+        max_length=128,
+        help_text="Введите новый пароль."
+    )
+    confirm_password = serializers.CharField(
+        write_only=True,
+        required=True,
+        help_text="Повторите новый пароль для подтверждения."
+    )
+
+    def validate(self, data):
+        """
+        Проверяем, совпадают ли пароли в полях `password` и `confirm_password`.
+        """
+        if data['password'] != data['confirm_password']:
             raise serializers.ValidationError("Пароли не совпадают.")
-        return attrs
+        return data
+
+        
+        

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
+
 class Product(models.Model):
     name = models.CharField(max_length=255, verbose_name="Наименование товара")
     short_description = models.CharField(max_length=500, verbose_name="Краткое описание")
@@ -60,6 +61,7 @@ class UserProfile(models.Model):
     class Meta:
         verbose_name = "Профиль"
         verbose_name_plural = "Профиль"
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         """Создание обычного пользователя"""
